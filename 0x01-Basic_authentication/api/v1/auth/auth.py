@@ -2,8 +2,9 @@
 """
 Authentification module for the API
 """
-from typing import List
+from typing import List, TypeVar
 from flask import request
+import re
 
 class Auth:
     """
@@ -12,10 +13,31 @@ class Auth:
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """
         Checks if a path requires authentification
+        
+        if path is None or excluded_paths is None:
+            return True
+
+        path = path.rstrip('/')
+        for exclusion_path in map(lambda x: x.strip(), excluded_paths):
+                exclusion_path = exclusion_path.rstrip('/')
+
+                if exclusion_path.endswith('*'):
+                    if path.startswith(exclusion_path[:-1]):
+                        return False
+                elif path == exclusion_path:
+                    return False
         """
-        if path is not None and excluded_paths is not None:
-            for exclusive_path in map(lambda x: x.strip(), exclude_paths):
-                pattern = ""
-                if exclusive_path[-1] == '*':
-        return True
+
+        return False
+
     def authorization_header(self, request=None) -> str:
+        """
+        Temporarily returns None, ignoring the request argument.
+        """
+        return None
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """
+        Temporarily returns None, ignoring the request argument.
+        """
+        return None
