@@ -15,7 +15,7 @@ app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 auth = None
 AUTH_TYPE = getenv('AUTH_TYPE', 'auth')
-if auth_type == auth:
+if AUTH_TYPE == 'auth':
     auth = Auth()
 
 @app.errorhandler(404)
@@ -39,6 +39,28 @@ def forbidden(error) -> str:
     Forbidden handler
     """
     return jsonify({"error": "Forbidden"}), 403
+
+
+@app.before_request
+def authenticate_user():
+    """
+    Authenticate a user before processing a request
+    """
+    if auth:
+        excluded_path = [
+            '/api/v1/status/',
+            '/api/v1/unauthorized/',
+            '/api/v1/forbidden/',
+        ]
+
+        if auth.require_auth(request.path, excluded_path):
+            auth_header = auth.authorization_header(request)
+            user = auth.current_user(request)
+
+            if auth_header is None:
+                abort(401)
+            if user is None:
+                abort(403)
 
 
 if __name__ == "__main__":
