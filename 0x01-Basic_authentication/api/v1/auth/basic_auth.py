@@ -5,6 +5,7 @@ Basic module to authenticate the API module
 import re
 import base64
 import binascii
+from typing import TypeVar
 from .auth import Auth
 class BasicAuth(Auth):
     """
@@ -39,4 +40,40 @@ class BasicAuth(Auth):
                 return res.decode('utf-8')
             except (binascii.Error, UnicodeDecodeError):
                 return None
+        return None
+
+
+    def extract_user_credentials(self,
+            decoded_base64_authorization_header: str) -> (str, str):
+        """
+        Basic - User credentials
+        """
+        if isinstance(decoded_base64_authorization_header, str):
+            pattern = r'(?P<user>[^:]+):(?P<password>.+)'
+            field_match = re.fullmatch(
+                pattern,
+                decoded_base64_authorization_header.strip(),
+            )
+            if field_match is not None:
+                user = field_match.group('user')
+                password = field_match.group('password')
+                return user, password
+        return None, None
+
+
+    def user_object_from_credentials(self,
+            user_email: str,
+            user_pwd: str) -> TypeVar('User'):
+        """
+        Retrieves a user based on the user's authentification credential.
+        """
+        if isinstance(user_email, str) and isinstance(user_pwd, str):
+            try:
+                users = User.search({'email': user_email})
+            except Exception:
+                return None
+            if len(users) <= 0:
+                return None
+            if users[0].is_valid_password(user_pwd):
+                return users[0]
         return None
