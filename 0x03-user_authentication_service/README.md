@@ -6,3 +6,5 @@ User authentication service
 3. update user
 4. Hash password
 5. Register user
+6. Basic Flask app
+7. Register user
