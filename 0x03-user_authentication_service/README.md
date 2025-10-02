@@ -8,3 +8,4 @@ User authentication service
 5. Register user
 6. Basic Flask app
 7. Register user
+8. Credentials validation
