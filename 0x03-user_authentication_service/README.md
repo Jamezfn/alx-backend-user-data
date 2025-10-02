@@ -11,3 +11,4 @@ User authentication service
 8. Credentials validation
 9. Generate UUIDs
 10. Get session ID
+11. Log in
