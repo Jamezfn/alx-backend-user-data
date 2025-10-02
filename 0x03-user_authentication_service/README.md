@@ -9,3 +9,5 @@ User authentication service
 6. Basic Flask app
 7. Register user
 8. Credentials validation
+9. Generate UUIDs
+10. Get session ID
