@@ -46,11 +46,11 @@ def logout():
     """Logout endpoint - destroys session and redirects home"""
     session_id = request.cookies.get("session_id")
     if session_id is None:
-        abort(401)
+        abort(403)
 
     user = AUTH.get_user_from_session_id(session_id)
     if user is None:
-        abort(401)
+        abort(403)
 
     AUTH.destroy_session(user.id)
     return redirect("/")
@@ -60,10 +60,10 @@ def profile():
     """Return the email of the logged-in user based on session cookie."""
     session_id = request.cookies.get("session_id")
     if session_id is None:
-        abort(401)
+        abort(403)
     user = AUTH.get_user_from_session_id(session_id)
     if user is None:
-        abort(401)
+        abort(403)
     return jsonify({"email": user.email})
 
 @app.route("/reset_password", methods=["POST"], strict_slashes=True)
