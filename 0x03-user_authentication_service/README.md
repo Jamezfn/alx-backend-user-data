@@ -12,3 +12,5 @@ User authentication service
 9. Generate UUIDs
 10. Get session ID
 11. Log in
+12. Find user by session ID
+13. Destroy session
