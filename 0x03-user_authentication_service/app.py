@@ -43,6 +43,7 @@ def login():
 
 @app.route("/sessions", methods=["DELETE"], strict_slashes=True)
 def logout():
+    """Logout endpoint - destroys session and redirects home"""
     session_id = request.cookies.get("session_id")
     if session_id is None:
         abort(401)
@@ -53,6 +54,17 @@ def logout():
 
     AUTH.destroy_session(user.id)
     return redirect("/")
+
+@app.route("/profile", methods=["GET"], strict_slashes=True)
+def profile():
+    """Return the email of the logged-in user based on session cookie."""
+    session_id = request.cookies.get("session_id")
+    if session_id is None:
+        abort(401)
+    user = AUTH.get_user_from_session_id(session_id)
+    if user is None:
+        abort(401)
+    return jsonify({"email": user.email})
 
 
 if __name__ == "__main__":
